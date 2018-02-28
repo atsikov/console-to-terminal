@@ -1,0 +1,15 @@
+{
+  "name": "console-to-terminal",
+  "description": "Small utility to redirect console.log/warn/error/info calls to HTTP requests and show output in terminal",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^2.3.1",
+    "cors": "^2.8.4",
+    "express": "^4.16.2"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}

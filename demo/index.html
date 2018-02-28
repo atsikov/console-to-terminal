@@ -1,0 +1,18 @@
+<script src="/console-hook.js"></script>
+<script>
+    console.log("console.log", "strings (with line breaks)", "Hello\nworld!");
+    console.warn("console.warn", "arrays", ["Hello", "world!"]);
+    console.error("console.error", "objects", { "Hello": "world!" });
+    console.info("console.info", "Enjoy!");
+
+    function testTraceA() {
+        console.trace();
+    }
+
+    function testTraceB() {
+        testTraceA();
+    }
+
+    testTraceB();
+</script>
+Check output in both browser console and terminal!

@@ -4,7 +4,7 @@ console-to-terminal is a small utility to redirect console output (log, warn, er
 ### Usage
 1. Clone repo and run `yarn` to install dependencies
 2. Run `yarn start` to start server. By defaut it is run on `localhost:8765`. Host and port could be modified if server started with `yarn start port` or `yarn start host:port`.
-3. Add `<script "http://my-local-ip:8765/console-hook.js"></script>` to your web application's entry point. It will install custom hooks for console methods and will make requests to running server.
+3. Add `<script "http://my-local-ip:port/console-hook.js"></script>` to your web application's entry point. It will install custom hooks for console methods and will make requests to running server.
 4. In case you want to load hooks script from your own endpoint, you need to modify `serverHost` and `serverPort` constants in `console-hook.js`.
 
 ### Demo

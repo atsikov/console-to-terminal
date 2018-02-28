@@ -1,5 +1,5 @@
 ### console-to-terminal
-console-to-terminal is a small utility to redirect console output (log, warn, error, info) to the terminal. It is really handy while debugging web applications without a possibility to check console in DevTool (Chrome on iOS or custom "native" browsers on Androids).
+console-to-terminal is a small utility to redirect console output (log, warn, error, info or trace) to the terminal. It is really handy while debugging web applications without a possibility to check console in DevTool (Chrome on iOS or custom "native" browsers on Androids).
 
 ### Usage
 1. Clone repo and run `yarn` to install dependencies

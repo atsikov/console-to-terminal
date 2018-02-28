@@ -9,33 +9,18 @@ const serverPort = 8765;
 const serverHostWithPort = `${serverHost}:${serverPort}`;
 const serverUrl = `${protocol}//${serverHostWithPort}/writeConsoleMessage`;
 
-function getConsoleFormData(...rest) {
-    const formData = new FormData();
-    [...rest].forEach((el, idx) => {
-        const elType = typeof el;
-        if (
-            elType === "number" ||
-            elType === "string" ||
-            elType === "boolean"
-        ) {
-            formData.append(`param${idx}`, el.toString());
-        } else if (typeof el === "Array") {
-            formData.append(`param${idx}`, el.join(","));
-        } else {
-            formData.append(`param${idx}`, JSON.stringify(el));
-        }
-    });
-
-    return formData;
+function prepareData(...rest) {
+    return [...rest].map((el) => 
+        typeof el === "object" && el.constructor.name === "Object" ? JSON.stringify(el) : el
+    );
 }
 
 function makeRequest(messageType, ...rest) {
-    const messagePayload = getConsoleFormData(...rest);
     fetch(
         `${serverUrl}?type=${messageType}`,
         {
             method: "POST",
-            body: messagePayload,
+            body: JSON.stringify(prepareData(...rest)),
         },
     ).catch((e) => error(e));
 }

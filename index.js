@@ -4,21 +4,6 @@ const chalk = require("chalk");
 const path = require("path");
 const fs = require("fs");
 
-const app = express();
-app.use(cors());
-
-function parseMultipart(rawData) {
-    const boundary = rawData.split("\r\n")[0];
-    return rawData
-        .split(`${boundary}`)
-        .map(part => part
-            .split("\r\n")
-            .slice(3, -1)
-            .join("\r\n"),
-        )
-        .slice(1, -1);
-}
-
 const rePort = /^\d+$/;
 const reHostPort = /^([a-zA-Z0-9.-_]+)\:(\d+)$/;
 
@@ -39,6 +24,9 @@ Usage examples: "yarn start", "yarn start 1234", "yarn start hostname:1234"
         process.exit(1);
     }
 }
+
+const app = express();
+app.use(cors());
 
 app.post("/writeConsoleMessage", (req, res) => {
     const buffer = [];
@@ -67,7 +55,7 @@ app.post("/writeConsoleMessage", (req, res) => {
                     color = chalk;
             }
             console.log(color(
-                icon + parseMultipart(Buffer.concat(buffer).toString()).join(",")
+                icon + JSON.parse(Buffer.concat(buffer).toString()).join(",")
             ));
         });
     res.send("OK");

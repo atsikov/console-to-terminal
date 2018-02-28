@@ -68,12 +68,12 @@ app.get("/demo", (req, res) => {
 let scriptContents;
 app.get("/console-hook.js", (req, res) => {
     if (!scriptContents) {
-        scriptContents = fs.readFileSync(
-            path.join(__dirname, "scripts", "console-hook.js")
-        )
-            .toString()
-            .replace(/(const serverHost = ).*;/, `$1"${host}";`)
-            .replace(/(const serverPort = ).*;/, `$1${port};`);
+        scriptContents = `
+            window["__consoleToTerminalLocation__"] = ${JSON.stringify({ host, port })};
+            ${fs.readFileSync(
+                path.join(__dirname, "dist", "console-hook.js")
+            ).toString()}
+        `;
     }
 
     res.send(scriptContents);

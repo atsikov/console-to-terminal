@@ -1,11 +1,10 @@
 const { log, warn, error, info, trace } = window.console;
 const reChromeErrorPrefix = /^Error\:\s*/;
+const customLocation = window["__consoleToTerminalLocation__"];
 
-const { host, protocol } = window["__consoleToTerminalLocation__"] || location;
-// These consts will be changed while serving file
+const { host, protocol = "http:" } = customLocation || location;
 const serverHost = host.split(":")[0];
-const serverPort = 8765;
-// End of changeable consts
+const serverPort = customLocation && customLocation.port || 8765;
 const serverHostWithPort = `${serverHost}:${serverPort}`;
 const serverUrl = `${protocol}//${serverHostWithPort}/writeConsoleMessage`;
 
@@ -16,13 +15,9 @@ function prepareData(...rest) {
 }
 
 function makeRequest(messageType, ...rest) {
-    fetch(
-        `${serverUrl}?type=${messageType}`,
-        {
-            method: "POST",
-            body: JSON.stringify(prepareData(...rest)),
-        },
-    ).catch((e) => error(e));
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", `${serverUrl}?type=${messageType}`);
+    xhr.send(JSON.stringify(prepareData(...rest)));
 }
 
 window.console.log = function(...rest) {

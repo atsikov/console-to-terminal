@@ -25,6 +25,34 @@ Usage examples: "yarn start", "yarn start 1234", "yarn start hostname:1234"
     }
 }
 
+function outputMessage(request) {
+    const { type, message } = request;
+    let color;
+    let icon = "";
+    switch (type) {
+        case "log":
+            color = chalk.white;
+            break;
+        case "warn":
+            color = chalk.yellow;
+            icon = "⚠️  ";
+            break;
+        case "error":
+            color = chalk.red;
+            icon = "🚫  ";
+            break;
+        case "info":
+            color = chalk.blueBright;
+            icon = "ℹ️  ";
+            break;
+        default:
+            color = chalk;
+    }
+    console.log(color(
+        icon + message.join(",")
+    ));
+}
+
 const app = express();
 app.use(cors());
 
@@ -33,30 +61,8 @@ app.post("/writeConsoleMessage", (req, res) => {
     req
         .on("data", chunk => buffer.push(chunk))
         .on("end", () => {
-            let color;
-            let icon = "";
-            switch (req.query.type) {
-                case "log":
-                    color = chalk.white;
-                    break;
-                case "warn":
-                    color = chalk.yellow;
-                    icon = "⚠️  ";
-                    break;
-                case "error":
-                    color = chalk.red;
-                    icon = "🚫  ";
-                    break;
-                case "info":
-                    color = chalk.blueBright;
-                    icon = "ℹ️  ";
-                    break;
-                default:
-                    color = chalk;
-            }
-            console.log(color(
-                icon + JSON.parse(Buffer.concat(buffer).toString()).join(",")
-            ));
+            const payload = JSON.parse(Buffer.concat(buffer).toString());
+            payload.forEach(outputMessage);
         });
     res.send("OK");
 });

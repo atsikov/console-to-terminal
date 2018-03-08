@@ -1,6 +1,10 @@
 {
   "name": "console-to-terminal",
-  "description": "Small utility to redirect console.log/warn/error/info calls to HTTP requests and show output in terminal",
+  "author": {
+    "name": "Aleksei Tsikov",
+    "url": "https://github.com/atsikov"
+  },
+  "description": "Small utility to redirect console calls to HTTP requests and show output in terminal",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",

@@ -4,7 +4,7 @@ const chalk = require("chalk");
 const path = require("path");
 const fs = require("fs");
 
-module.exports = function createApp(host, port) {
+module.exports = function createApp(host, port, showXhr) {
     function outputMessage(request) {
         const { type, message } = request;
         let color;
@@ -55,7 +55,8 @@ module.exports = function createApp(host, port) {
     app.get("/console-hook.js", (req, res) => {
         if (!scriptContents) {
             scriptContents = `
-                window["__consoleToTerminalLocation__"] = ${JSON.stringify({ host, port })};
+                var scriptLocation = ${JSON.stringify({ host, port })};
+                var showXhr = ${showXhr};
                 ${fs.readFileSync(
                     path.resolve(__dirname, "../dist/console-hook.js")
                 ).toString()}

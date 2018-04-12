@@ -12,15 +12,14 @@ var _window$console = window.console,
     trace = _window$console.trace;
 
 var reChromeErrorPrefix = /^Error\:\s*/;
-var customLocation = window["__consoleToTerminalLocation__"];
 
-var _ref = customLocation || location,
+var _ref = scriptLocation || location,
     host = _ref.host,
     _ref$protocol = _ref.protocol,
     protocol = _ref$protocol === undefined ? "http:" : _ref$protocol;
 
 var serverHost = host.split(":")[0];
-var serverPort = customLocation && customLocation.port || 8765;
+var serverPort = scriptLocation && scriptLocation.port || 8765;
 var serverHostWithPort = serverHost + ":" + serverPort;
 var serverUrl = protocol + "//" + serverHostWithPort + "/writeConsoleMessage";
 var processRequestsTimeout = 0;
@@ -50,6 +49,7 @@ function sendMessage(type) {
     }
 }
 
+var xmlHttpRequestOpen = XMLHttpRequest.prototype.open;
 function processRequests() {
     processRequestsTimeout = 0;
 
@@ -64,7 +64,7 @@ function processRequests() {
     pendingRequests = [];
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "" + serverUrl);
+    xmlHttpRequestOpen.call(xhr, "POST", "" + serverUrl);
     xhr.send(JSON.stringify(payload));
 }
 
@@ -105,5 +105,15 @@ window.console.trace = function () {
     var stack = new Error("console.trace").stack;
     sendMessage("trace", stack.replace(reChromeErrorPrefix, ""));
 };
+if (showXhr) {
+    XMLHttpRequest.prototype.open = function () {
+        for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
+            args[_key7] = arguments[_key7];
+        }
+
+        console.log(args[0] + " " + args[1]);
+        xmlHttpRequestOpen.apply(this, args);
+    };
+}
 
 console.info("Navigated to " + location.href + "\n");

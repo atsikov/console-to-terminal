@@ -1,10 +1,9 @@
 const { log, warn, error, info, trace } = window.console;
 const reChromeErrorPrefix = /^Error\:\s*/;
-const customLocation = window["__consoleToTerminalLocation__"];
 
-const { host, protocol = "http:" } = customLocation || location;
+const { host, protocol = "http:" } = scriptLocation || location;
 const serverHost = host.split(":")[0];
-const serverPort = customLocation && customLocation.port || 8765;
+const serverPort = scriptLocation && scriptLocation.port || 8765;
 const serverHostWithPort = `${serverHost}:${serverPort}`;
 const serverUrl = `${protocol}//${serverHostWithPort}/writeConsoleMessage`;
 let processRequestsTimeout = 0;
@@ -26,6 +25,7 @@ function sendMessage(type, ...rest) {
     }
 }
 
+const xmlHttpRequestOpen = XMLHttpRequest.prototype.open;
 function processRequests() {
     processRequestsTimeout = 0;
 
@@ -36,7 +36,7 @@ function processRequests() {
     pendingRequests = [];
 
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", `${serverUrl}`);
+    xmlHttpRequestOpen.call(xhr, "POST", `${serverUrl}`);
     xhr.send(JSON.stringify(payload));
 }
 
@@ -60,6 +60,12 @@ window.console.trace = function() {
     trace();
     const stack = new Error("console.trace").stack
     sendMessage("trace", stack.replace(reChromeErrorPrefix, ""));
+}
+if (showXhr) {
+    XMLHttpRequest.prototype.open = function(...args) {
+        console.log(`${args[0]} ${args[1]}`);
+        xmlHttpRequestOpen.apply(this, args);
+    }
 }
 
 console.info(`Navigated to ${location.href}\n`);

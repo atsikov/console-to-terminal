@@ -6,7 +6,12 @@ const reHostPort = /^([a-zA-Z0-9.-_]+)\:(\d+)$/;
 let host = "localhost";
 let port = 8765;
 let showXhr = process.argv[3] === "--xhr";
-const customHostPort = process.argv[2];
+let customHostPort = process.argv[2];
+
+if (process.argv[2] === "--xhr") {
+    showXhr = true;
+    customHostPort = false;
+}
 if (customHostPort) {
     if (customHostPort.match(rePort)) {
         port = parseInt(customHostPort);

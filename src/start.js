@@ -1,4 +1,5 @@
 const app = require("./app");
+const chalk = require("chalk");
 
 const rePort = /^\d+$/;
 const reHostPort = /^([a-zA-Z0-9.-_]+)\:(\d+)$/;

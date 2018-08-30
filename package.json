@@ -4,6 +4,10 @@
     "name": "Aleksei Tsikov",
     "url": "https://github.com/atsikov"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atsikov/console-to-terminal"
+  },
   "description": "Small utility to redirect console calls to HTTP requests and show output in terminal",
   "version": "1.1.0",
   "main": "index.js",

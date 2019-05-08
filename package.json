@@ -19,7 +19,7 @@
   },
   "scripts": {
     "build": "babel scripts -d dist",
-    "start": "yarn build && node src/start.js localhost:8765 --xhr"
+    "start": "yarn build && node src/start.js"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
